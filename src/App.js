@@ -9,6 +9,7 @@ const App = () => {
   let [restDuration, setRestDuration] = useState(0);
 
   const [isRunning, setIsRunning] = useState(false);
+  const [isResting, setIsResting] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
 
 
@@ -17,14 +18,37 @@ const App = () => {
 
     if(isRunning && (currentTime < workingSetDuration)) {
       interval = setInterval(() => {
+        console.log(interval);
         setCurrentTime(currentTime => currentTime + 1);
       }, 1000);
-    } else if((!isRunning && currentTime !== 0) || (currentTime >= workingSetDuration)) {
-      console.log('clear interval');
-      stopTimer();
+    } else if(isResting && (currentTime < restDuration)) {
+      interval = setInterval(() => {
+        console.log(interval);
+        setCurrentTime(currentTime => currentTime + 1);
+      }, 1000);
     }
+    
+    else if(isRunning && (currentTime >= workingSetDuration)) {
+      // stopTimer();
+      clearInterval(interval);
+      setCurrentTime(0);
+      // Start resting
+      setIsRunning(false);
+      setIsResting(true);
+    }
+
+    else if(isResting && (currentTime >= restDuration)) {
+      // stopTimer();
+      clearInterval(interval);
+      setCurrentTime(0);
+      // Start resting
+      setIsRunning(true);
+      setIsResting(false);
+    }
+
     return () => clearInterval(interval);
-  }, [isRunning, currentTime, workingSetDuration]);
+    
+  }, [isRunning, isResting, currentTime, workingSetDuration, restDuration]);
 
   const startTimer = () => {
     setIsRunning(true);
