@@ -15,30 +15,29 @@ const App = () => {
 
   useEffect(() => {
     let interval = null;
-
-    if(isRunning && (currentTime < workingSetDuration)) {
+    // Timer when running
+    if(isRunning && (currentTime <= workingSetDuration)) {
       interval = setInterval(() => {
         console.log(interval);
         setCurrentTime(currentTime => currentTime + 1);
       }, 1000);
-    } else if(isResting && (currentTime < restDuration)) {
+    // Timer when resting
+    } else if(isResting && (currentTime <= restDuration)) {
       interval = setInterval(() => {
         console.log(interval);
         setCurrentTime(currentTime => currentTime + 1);
       }, 1000);
     }
-    
-    else if(isRunning && (currentTime >= workingSetDuration)) {
-      // stopTimer();
+    // Switch to rest
+    else if(isRunning && (currentTime > workingSetDuration)) {
       clearInterval(interval);
       setCurrentTime(0);
       // Start resting
       setIsRunning(false);
       setIsResting(true);
     }
-
-    else if(isResting && (currentTime >= restDuration)) {
-      // stopTimer();
+    // Switch to run
+    else if(isResting && (currentTime > restDuration)) {
       clearInterval(interval);
       setCurrentTime(0);
       // Start resting
@@ -66,6 +65,8 @@ const App = () => {
 
   return (
     <div>
+      
+      {isResting ? <strong>Rest</strong> : '' }
       <h1>{currentTime}</h1>
       <Settings 
         setWorkingSetDuration={setWorkingSetDuration} 
