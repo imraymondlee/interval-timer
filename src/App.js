@@ -3,15 +3,19 @@ import { Button } from 'antd';
 
 import Settings from './components/Settings';
 import './App.css';
+import doubleBeepSound from './double-beep.wav';
+import tripleBeepSound from './triple-beep.wav';
 
 const App = () => {
-  let [workingSetDuration, setWorkingSetDuration] = useState(0);
-  let [restDuration, setRestDuration] = useState(0);
+  const [workingSetDuration, setWorkingSetDuration] = useState(0);
+  const [restDuration, setRestDuration] = useState(0);
 
   const [isRunning, setIsRunning] = useState(false);
   const [isResting, setIsResting] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
 
+  const doubleBeep = new Audio(doubleBeepSound);
+  const tripleBeep = new Audio(tripleBeepSound);
 
   useEffect(() => {
     let interval = null;
@@ -30,6 +34,7 @@ const App = () => {
     }
     // Switch to rest
     else if(isRunning && (currentTime > workingSetDuration)) {
+      doubleBeep.play();
       clearInterval(interval);
       setCurrentTime(0);
       // Start resting
@@ -38,6 +43,7 @@ const App = () => {
     }
     // Switch to run
     else if(isResting && (currentTime > restDuration)) {
+      tripleBeep.play();
       clearInterval(interval);
       setCurrentTime(0);
       // Start resting
@@ -45,9 +51,10 @@ const App = () => {
       setIsResting(false);
     }
 
+
     return () => clearInterval(interval);
     
-  }, [isRunning, isResting, currentTime, workingSetDuration, restDuration]);
+  }, [isRunning, isResting, currentTime, workingSetDuration, restDuration, doubleBeep, tripleBeep]);
 
   const startTimer = () => {
     setIsRunning(true);
@@ -62,6 +69,10 @@ const App = () => {
     setWorkingSetDuration(0);
     setRestDuration(0);
   }
+
+
+
+
 
   return (
     <div>
@@ -84,7 +95,6 @@ const App = () => {
       <div>
         Rest Duration: {restDuration}
       </div>
-
     </div>
   );
 }
