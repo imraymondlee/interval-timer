@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Row, Col, Button, Progress } from 'antd';
+import { Row, Col, Button, Progress, message } from 'antd';
 
 import Settings from './components/Settings';
 import './App.css';
@@ -22,13 +22,11 @@ const App = () => {
     // Timer when running
     if(isRunning && (currentTime <= workingSetDuration)) {
       interval = setInterval(() => {
-        console.log(interval);
         setCurrentTime(currentTime => currentTime + 1);
       }, 1000);
     // Timer when resting
     } else if(isResting && (currentTime <= restDuration)) {
       interval = setInterval(() => {
-        console.log(interval);
         setCurrentTime(currentTime => currentTime + 1);
       }, 1000);
     }
@@ -51,13 +49,16 @@ const App = () => {
       setIsResting(false);
     }
 
-
     return () => clearInterval(interval);
     
   }, [isRunning, isResting, currentTime, workingSetDuration, restDuration, doubleBeep, tripleBeep]);
 
   const startTimer = () => {
-    setIsRunning(true);
+    if((workingSetDuration || restDuration) === 0) {
+      error();
+    } else {
+      setIsRunning(true);
+    }
   }
 
   const stopTimer = () => {
@@ -65,6 +66,7 @@ const App = () => {
   }
 
   const resetTimer = () => {
+    stopTimer();
     setCurrentTime(0);
     setWorkingSetDuration(0);
     setRestDuration(0);
@@ -80,8 +82,9 @@ const App = () => {
     }
   }
 
-
-
+  const error = () => {
+    message.error('Please fill in the durations.');
+  };
 
   return (
     <Row type="flex" justify="center" align="middle" style={{minHeight: '100vh'}}>
@@ -106,12 +109,13 @@ const App = () => {
             />
         </Row>
 
-        <Row type="flex" justify="center">
-          <Button type="primary" onClick={startTimer} style={{margin: '0.5rem'}}>Start</Button>
-          <Button type="primary" onClick={stopTimer} style={{margin: '0.5rem'}}>Stop</Button>
+        <Row type="flex" justify="center" style={{marginTop: '1rem'}}>
+          {!isRunning
+            ? <Button type="primary" onClick={startTimer} style={{margin: '0.5rem'}}>Start</Button>
+            : <Button type="primary" onClick={stopTimer} style={{margin: '0.5rem'}}>Stop</Button>
+          }
           <Button onClick={resetTimer} style={{margin: '0.5rem'}}>Reset</Button>
         </Row>
-
       </Col>
     </Row>
   );
