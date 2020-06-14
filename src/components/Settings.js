@@ -12,11 +12,14 @@ const Settings = (props) => {
 
   return (
     <div>
-      <label>Set Duration</label>
-      <InputNumber min={0} onChange={setWorkingSetDuration} value={props.workingSetDuration} />
-
-      <label>Rest Duration</label>
-      <InputNumber min={0} onChange={setRestDuration} value={props.restDuration} />
+      <div>
+        <label style={{fontWeight: 800}}>Set Duration (seconds): </label>
+        <InputNumber min={0} onChange={setWorkingSetDuration} value={props.workingSetDuration} />
+      </div>
+      <div>
+        <label style={{fontWeight: 800}}>Rest Duration (seconds): </label>
+        <InputNumber min={0} onChange={setRestDuration} value={props.restDuration} />
+      </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from 'antd';
+import { Row, Col, Button, Progress } from 'antd';
 
 import Settings from './components/Settings';
 import './App.css';
@@ -70,32 +70,50 @@ const App = () => {
     setRestDuration(0);
   }
 
+  const progressPercent = () => {
+    if(isRunning) {
+      return (currentTime / workingSetDuration) * 100;
+    } else if(isResting) {
+      return (currentTime / restDuration) * 100;
+    } else {
+      return;
+    }
+  }
 
 
 
 
   return (
-    <div>
-      
-      {isResting ? <strong>Rest</strong> : '' }
-      <h1>{currentTime}</h1>
-      <Settings 
-        setWorkingSetDuration={setWorkingSetDuration} 
-        workingSetDuration = {workingSetDuration} 
-        setRestDuration={setRestDuration} 
-        restDuration = {restDuration} 
-        />
-      <Button type="primary" onClick={startTimer}>Start</Button>
-      <Button type="primary" onClick={stopTimer}>Stop</Button>
-      <Button type="primary" onClick={resetTimer}>Reset</Button>
-      
-      <div>
-        Set Duration: {workingSetDuration}
-      </div>
-      <div>
-        Rest Duration: {restDuration}
-      </div>
-    </div>
+    <Row type="flex" justify="center" align="middle" style={{minHeight: '100vh'}}>
+      <Col style={{textAlign: 'center'}}>
+        <Row type="flex" justify="center">
+          <div style={{position: 'relative', marginBottom: '6rem'}}>
+            <div style={{position: 'absolute', top: '0%', width: '100%', textAlign: 'center'}}>
+              <strong>{isResting ? 'Rest' : '' }</strong>
+            </div>
+            <div style={{position: 'absolute', top: '34%', width: '100%', textAlign: 'center'}}>
+              <h1>{currentTime}</h1>
+            </div>
+            <Progress type="circle" percent={progressPercent()} showInfo={false} style={{transform: 'scale(-2, 2)'}} />
+          </div>
+        </Row>
+        <Row type="flex" justify="center">
+          <Settings 
+            setWorkingSetDuration={setWorkingSetDuration} 
+            workingSetDuration = {workingSetDuration} 
+            setRestDuration={setRestDuration} 
+            restDuration = {restDuration} 
+            />
+        </Row>
+
+        <Row type="flex" justify="center">
+          <Button type="primary" onClick={startTimer} style={{margin: '0.5rem'}}>Start</Button>
+          <Button type="primary" onClick={stopTimer} style={{margin: '0.5rem'}}>Stop</Button>
+          <Button onClick={resetTimer} style={{margin: '0.5rem'}}>Reset</Button>
+        </Row>
+
+      </Col>
+    </Row>
   );
 }
 
