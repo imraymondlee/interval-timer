@@ -60,7 +60,6 @@ const App = () => {
       error();
     } else {
       setIsRunning(true);
-      noSleep.enable();
     }
   }
 
@@ -89,6 +88,11 @@ const App = () => {
   const error = () => {
     message.error('Please fill in the durations.');
   };
+
+  document.addEventListener('click', function enableNoSleep() {
+    document.removeEventListener('click', enableNoSleep, false);
+    noSleep.enable();
+  }, false);
 
   return (
     <Row type="flex" justify="center" align="middle" style={{minHeight: '100vh'}}>
