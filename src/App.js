@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Button, Progress, message } from 'antd';
+import NoSleep from 'nosleep.js';
 
 import Settings from './components/Settings';
 import './App.css';
@@ -16,6 +17,7 @@ const App = () => {
 
   const doubleBeep = new Audio(doubleBeepSound);
   const tripleBeep = new Audio(tripleBeepSound);
+  const noSleep = new NoSleep();
 
   useEffect(() => {
     let interval = null;
@@ -58,11 +60,13 @@ const App = () => {
       error();
     } else {
       setIsRunning(true);
+      noSleep.enable();
     }
   }
 
   const stopTimer = () => {
     setIsRunning(false);
+    noSleep.disable();
   }
 
   const resetTimer = () => {
